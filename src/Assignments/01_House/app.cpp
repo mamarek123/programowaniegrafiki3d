@@ -35,9 +35,20 @@ void SimpleShapeApplication::init() {
 
     // A vector containing the x,y,z vertex coordinates for the triangle.
     std::vector<GLfloat> vertices = {
-            -0.5f, 0.0f, 0.0f,
-            0.5f, 0.0f, 0.0f,
-            0.0f, 0.5f, 0.0f};
+    -0.5f, 0.0f, 0.0f,   
+     0.5f, 0.0f, 0.0f,   
+     0.0f, 0.5f, 0.0f,   
+
+    
+    -0.5f, -0.5f, 0.0f,  
+     0.5f, -0.5f, 0.0f,  
+    -0.5f,  0.0f, 0.0f,  
+
+     0.5f, -0.5f, 0.0f,  
+    -0.5f,  0.0f, 0.0f,  
+     0.5f,  0.0f, 0.0f   
+};
+
 
     /*
      * All the calls to the OpenGL API are "encapsulated" in the OGL_CALL macro for debugging purposes as explained in
@@ -76,7 +87,7 @@ void SimpleShapeApplication::init() {
 
     // Setting the background color of the rendering window,
     // I suggest not using white or black for better debugging.
-    OGL_CALL(glClearColor(0.81f, 0.81f, 0.8f, 1.0f));
+    OGL_CALL(glClearColor(0.1f, 0.75f, 0.75f, 1.0f));
 
     // This set up an OpenGL viewport of the size of the whole rendering window.
     auto [w, h] = frame_buffer_size();
@@ -89,6 +100,6 @@ void SimpleShapeApplication::init() {
 void SimpleShapeApplication::frame() {
     // Binding the VAO will set up all the required vertex attribute arrays.
     OGL_CALL(glBindVertexArray(vao_));
-    OGL_CALL(glDrawArrays(GL_TRIANGLES, 0, 3));
+    OGL_CALL(glDrawArrays(GL_TRIANGLES, 0, 9));  
     OGL_CALL(glBindVertexArray(0));
 }
