@@ -126,10 +126,11 @@ void SimpleShapeApplication::init() {
     glm::mat4 PVM = P * V * M;
 
     GLuint PVMBuffer;
-    OGL_CALL(glGenBuffers(1, &PVMBuffer));
-    OGL_CALL(glNamedBufferData(PVMBuffer, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW));
-    OGL_CALL(glNamedBufferSubData(PVMBuffer, 0, sizeof(glm::mat4), &PVM[0]));
-    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1, PVMBuffer));
+    OGL_CALL(glCreateBuffers(1, &PVMBuffer));
+    OGL_CALL(glNamedBufferData(PVMBuffer, 16 * sizeof(float), nullptr, GL_STATIC_DRAW));
+    OGL_CALL(glNamedBufferSubData(PVMBuffer, 0, 16 * sizeof(float), &PVM[0]));
+    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1,PVMBuffer));
+
 
     OGL_CALL(glViewport(0, 0, w, h));
     OGL_CALL(glUseProgram(program));

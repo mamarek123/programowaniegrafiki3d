@@ -65,18 +65,8 @@ namespace {
  */
 xe::Application::Application(int width, int height, std::string title, bool debug, int swap_interval)
         : screenshot_n_(0) {
-    SPDLOG_INFO("Application::Application(window size = {}x{}, {}, debug = {}, swap interval = {})", width, height,
-                title, debug, swap_interval);
-
-    int glfw_major, glfw_minor, glfw_revision;
-    glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
-
-
+    SPDLOG_INFO("Application::Application({}, {}, {}, {}, {})", width, height, title, debug, swap_interval);
     if (glfwInit()) {
-
-        SPDLOG_INFO("GLFW version {}.{}.{} platform = {}", glfw_major, glfw_minor, glfw_revision,
-                    xe::utils::glfw::platform_name(glfwGetPlatform()));
-
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -135,9 +125,6 @@ xe::Application::Application(int width, int height, std::string title, bool debu
         ImGui_ImplGlfw_InitForOpenGL(window_, true);
         const char *glsl_version = "#version 410";
         ImGui_ImplOpenGL3_Init(glsl_version);
-    } else {
-        SPDLOG_CRITICAL("Cannot initialize GLFW");
-        exit(-1);
     }
 }
 
@@ -151,7 +138,6 @@ void xe::Application::run(int verbose) {
         SPDLOG_INFO("{} {}", utils::get_gl_vendor(), utils::get_gl_renderer());
         SPDLOG_INFO("OpenGL {} GLSL {}", utils::get_gl_version(), utils::get_glsl_version());
     }
-
 
     auto major = utils::get_gl_version_major();
     auto minor = utils::get_gl_version_minor();
@@ -168,7 +154,6 @@ void xe::Application::run(int verbose) {
             setup_debug_output();
         }
     }
-
 
     init();
 
@@ -226,17 +211,21 @@ void xe::Application::loop() {
 #endif
 
     while (!glfwWindowShouldClose(window_)) {
-        // Clears the framebuffer by filling it with color set using the glClearColor function.
-        // Also clears the depth buffer.
+        //Clear the framebuffer by filling it with color set using the glClearColor function.
+        //Also clears the depth buffer.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //This method should be overridden by you and will contain the rendering code.
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //This method should be overridden by you and will contain the rendering code.
         frame();
-
+        /* Swap front and back buffers
+           The rendering is done into the BACK buffer, swapping it with front buffer displays it on the screen.
+           This is done after n screen updates where n is the number set by the glfwSwapInterwal.
+           Setting it to one as I did set the swap rate to v-sync rate.
+        */
         ImGuiIO &io = ImGui::GetIO();
         ImGuiWindowFlags window_flags =
                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize |
@@ -245,7 +234,7 @@ void xe::Application::loop() {
         ImGui::SetNextWindowBgAlpha(0.35f);
         ImGui::SetNextWindowPos(ImVec2(10.0f, 10.0f), ImGuiCond_Always, ImVec2(0.0, 0.0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::Begin("data", nullptr,
+        ImGui::Begin("Hello, world!", nullptr,
                      window_flags);                          // Create a window called "Hello, world!" and append into it.
 
         ImGui::Text("FPS: %.1f", io.Framerate);
@@ -254,14 +243,6 @@ void xe::Application::loop() {
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glFinish();
-
-        /* Swap front and back buffers
-           The rendering is done into the BACK buffer, swapping it with front buffer displays it on the screen.
-           This is done after n screen updates where n is the number set by the glfwSwapInterwal.
-           Setting it to one as I did set the swap rate to v-sync rate.
-           Setting it to zero disables v-sync.
-        */
         glfwSwapBuffers(window_);
 
         /* Poll for and process events */

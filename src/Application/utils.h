@@ -8,10 +8,6 @@
 #include <string>
 #include <unordered_map>
 
-#define GLFW_INCLUDE_NONE
-
-#include <GLFW/glfw3.h>
-
 #include "glad/gl.h"
 
 namespace xe {
@@ -30,8 +26,9 @@ namespace xe {
         std::string get_glsl_version(void);
 
         int get_gl_version_major(void);
-
         int get_gl_version_minor(void);
+
+        std::string get_gl_description(void);
 
         // Error reporting/debuging
 
@@ -55,12 +52,6 @@ namespace xe {
 
         GLuint create_program(const shader_source_map_t &shaders_src);
 
-
-        namespace glfw {
-
-            std::string platform_name(int platform);
-
-        }
     }
 }
 

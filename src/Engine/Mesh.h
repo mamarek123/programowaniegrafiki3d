@@ -12,7 +12,7 @@
 
 namespace xe {
 
-    enum AttributeType {
+    enum  AttributeType {
         POSITION = 0,
         NORMAL = 1,
         TANGENT = 2,
@@ -40,38 +40,29 @@ namespace xe {
         void load_indices(size_t offset, size_t size, void *data);
 
         void *map_vertex_buffer();
-
         void unmap_vertex_buffer();
-
         void *map_index_buffer();
-
         void unmap_index_buffer();
 
         void add_attribute(AttributeType attr_type, GLuint size, GLenum type, GLsizei offset) const;
 
-        void add_submesh(GLuint start, GLuint end) {
+        void add_primitive(GLuint start, GLuint end) {
             primitives_.emplace_back(start, end);
         }
 
-        void add_submesh(GLuint start, GLuint end, const Material *material) {
-            primitives_.emplace_back(start, end, material);
-        }
 
-        void add_primitive(GLuint start, GLuint end) {
-            add_submesh(start, end);
-        }
 
         void add_primitive(GLuint start, GLuint end, const Material *material) {
-            add_submesh(start, end, material);
+            primitives_.emplace_back(start, end, material);
         }
 
         virtual void draw() const;
 
-        struct SubMesh {
-            SubMesh(GLuint start, GLuint end) :
+        struct Primitive {
+            Primitive(GLuint start, GLuint end) :
                     start(start), end(end), material(xe::NullMaterial::null_material()) {}
 
-            SubMesh(GLuint start, GLuint end, const Material *material) :
+            Primitive(GLuint start, GLuint end, const Material *material) :
                     start(start), end(end), material(material) {}
 
             const GLuint start;
@@ -92,7 +83,7 @@ namespace xe {
         const GLenum index_type_;
         const GLsizei stride_;
 
-        std::vector<SubMesh> primitives_;
+        std::vector<Primitive> primitives_;
 
     };
 
