@@ -34,6 +34,7 @@ void SimpleShapeApplication::init() {
         exit(-1);
     }
 
+
     std::vector<GLfloat> vertices = {
 
         //base
