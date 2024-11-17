@@ -34,21 +34,56 @@ void SimpleShapeApplication::init() {
         exit(-1);
     }
 
-    // A vector containing the x,y,z vertex coordinates for the triangle.
+    // // A vector containing the x,y,z vertex coordinates for the triangle.
+    // std::vector<GLfloat> vertices = {
+    //     -0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f, //0
+    //      0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f, //1
+    //     -0.5f,  0.0f, 0.0f,    0.0f, 1.0f, 0.0f, //2
+    //      0.5f,  0.0f, 0.0f,    0.0f, 1.0f, 0.0f, //3
+    //     -0.5f,  0.0f, 0.0f,    1.0f, 0.0f, 0.0f, //4
+    //      0.5f,  0.0f, 0.0f,    1.0f, 0.0f, 0.0f, //5
+    //      0.0f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f, //6
+    // };
+    //
+    // std::vector<GLubyte> indices = {
+    //     0, 1, 2,
+    //     1, 3, 2,
+    //     4, 5, 6,
+    // };
+
     std::vector<GLfloat> vertices = {
-        -0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f, //0
-         0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f, //1
-        -0.5f,  0.0f, 0.0f,    0.0f, 1.0f, 0.0f, //2
-         0.5f,  0.0f, 0.0f,    0.0f, 1.0f, 0.0f, //3
-        -0.5f,  0.0f, 0.0f,    1.0f, 0.0f, 0.0f, //4
-         0.5f,  0.0f, 0.0f,    1.0f, 0.0f, 0.0f, //5
-         0.0f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f, //6
-    };
+
+        //base
+        -0.5f, 0.5f, 0.0f, 0.5, 0.5, 0.5,  //0
+        -0.5f, -0.5f, 0.0f, 0.5, 0.5, 0.5, //1
+        0.5f, -0.5f, 0.0f, 0.5, 0.5, 0.5,  //2
+        0.5f, 0.5f, 0.0f, 0.5, 0.5, 0.5,   //3
+        //red wall
+        0.5f, -0.5f, 0.0f, 1, 0, 0,        //4
+        0.0f, 0.0f, 1.0f, 1, 0, 0,         //5
+        0.5f, 0.5f, 0.0f, 1, 0, 0,         //6
+        // green wall
+        -0.5f, -0.5f, 0.0f, 0, 1, 0,        //7
+        0.0f, 0.0f, 1.0f, 0, 1, 0,          //8
+        -0.5f, 0.5f, 0.0f, 0, 1, 0,         //9
+        //blue wall
+        0.5f, 0.5f, 0.0f, 0, 0, 1,         //10
+        0.0f, 0.0f, 1.0f, 0, 0, 1,         //11
+        -0.5f, 0.5f, 0.0f, 0, 0, 1,        //12
+        //yellow wall
+        0.5f, -0.5f, 0.0f, 1, 1, 0,        //13
+        0.0f, 0.0f, 1.0f, 1, 1, 0,         //14
+        -0.5f, -0.5f, 0.0f, 1, 1, 0,       //15
+
+        };
 
     std::vector<GLubyte> indices = {
-        0, 1, 2,
-        1, 3, 2,
-        4, 5, 6,
+        0, 2, 1,
+        0, 3, 2,
+        4, 6, 5,
+        7, 8, 9,
+        10, 12, 11,
+        13, 14, 15
     };
 
 
@@ -95,28 +130,13 @@ void SimpleShapeApplication::init() {
  
     OGL_CALL(glClearColor(0.1f, 0.75f, 0.75f, 1.0f));
 
-    float strength = 0.5;
-    float mix_color[3] = {0.0, 0.0, 1.0}; 
 
-
-    GLuint mixerBuffer;
-    OGL_CALL(glCreateBuffers(1, &mixerBuffer));
-    OGL_CALL(glNamedBufferData(mixerBuffer, 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW)); 
-
-    OGL_CALL(glNamedBufferSubData(mixerBuffer, 0, sizeof(float), &strength));
-    OGL_CALL(glNamedBufferSubData(mixerBuffer, 16, 3 * sizeof(float), mix_color)); // mix_color
-
-
-    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, mixerBuffer));
 
 
     glm::mat4 M(1.0);
-    M = glm::translate(M, glm::vec3(-1.0f, 1.0f, 0.0f));
-    glm::mat4 V = glm::lookAt(
-        glm::vec3(0.0f, -2.0f, 2.0f), 
-        glm::vec3(0.0f, 0.0f, 0.0f),  
-        glm::vec3(0.0f, 0.0f, 1.0f)   
-    );
+    glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),  // Camera position
+                              glm::vec3(0.0f, 0.0f, 0.0f),  // Look-at point (origin)
+                              glm::vec3(0.0f, 1.0f, 0.0f)); // Up vector (y direction)
 
     auto [w, h] = frame_buffer_size();
     float aspect = static_cast<float>(w) / static_cast<float>(h);
@@ -126,13 +146,16 @@ void SimpleShapeApplication::init() {
     glm::mat4 PVM = P * V * M;
 
     GLuint PVMBuffer;
-    OGL_CALL(glGenBuffers(1, &PVMBuffer));
-    OGL_CALL(glNamedBufferData(PVMBuffer, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW));
-    OGL_CALL(glNamedBufferSubData(PVMBuffer, 0, sizeof(glm::mat4), &PVM[0]));
-    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1, PVMBuffer));
+    OGL_CALL(glCreateBuffers(1, &PVMBuffer));
+    OGL_CALL(glNamedBufferData(PVMBuffer, 16 * sizeof(float), nullptr, GL_STATIC_DRAW));
+    OGL_CALL(glNamedBufferSubData(PVMBuffer, 0, 16 * sizeof(float), &PVM[0]));
+    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1,PVMBuffer));
+
 
     OGL_CALL(glViewport(0, 0, w, h));
     OGL_CALL(glUseProgram(program));
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
 
 }
 
@@ -140,6 +163,6 @@ void SimpleShapeApplication::init() {
 void SimpleShapeApplication::frame() {
     
     OGL_CALL(glBindVertexArray(vao_));
-    OGL_CALL(glDrawElements(GL_TRIANGLES, 9,GL_UNSIGNED_BYTE,nullptr));
+    OGL_CALL(glDrawElements(GL_TRIANGLES, 18,GL_UNSIGNED_BYTE,nullptr));
     OGL_CALL(glBindVertexArray(0));
 }
