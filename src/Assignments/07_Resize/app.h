@@ -8,6 +8,8 @@
 
 #include "glad/gl.h"
 
+#include <glm/glm.hpp>
+
 #include "Application/application.h"
 
 
@@ -20,6 +22,19 @@ public:
     void init() override;
 
     void frame() override;
+
+    void framebuffer_resize_callback(int w, int h) override;
+
+    float fov_;
+    float aspect_;
+    float near_;
+    float far_;
+
+    glm::mat4 P_;
+    glm::mat4 V_;
+    glm::mat4 M_;
+
+    GLuint u_trans_buffer_handle_;
 
 private:
     GLuint vao_;

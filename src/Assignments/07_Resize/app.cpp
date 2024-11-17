@@ -15,6 +15,12 @@
 #include <glm/gtc/matrix_transform.hpp> // For glm::translate, glm::lookAt, glm::perspective
 #include <glm/gtc/type_ptr.hpp>         // For glm::value_ptr
 
+void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
+    Application::framebuffer_resize_callback(w, h);
+    aspect_ = static_cast<float>(w) / static_cast<float>(h);
+    OGL_CALL(glViewport(0, 0, w, h));
+}
+
 void SimpleShapeApplication::init() {
     /*
      * A utility function that reads the shaders' source files, compiles them and creates the program object,
@@ -117,25 +123,20 @@ void SimpleShapeApplication::init() {
 
 
 
-    glm::mat4 M(1.0);
-    glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),  // Camera position
+    M_ = glm::mat4(1.0);
+    V_ = glm::lookAt(glm::vec3(2.0f, 1.0f, 2.0f),  // Camera position
                               glm::vec3(0.0f, 0.0f, 0.0f),  // Look-at point (origin)
-                              glm::vec3(0.0f, 1.0f, 0.0f)); // Up vector (y direction)
+                              glm::vec3(0.0f, 0.0f, 1.0f)); // Up vector (y direction)
+
+
+
+
+    OGL_CALL(glCreateBuffers(1, &u_trans_buffer_handle_));
+    OGL_CALL(glNamedBufferData(u_trans_buffer_handle_, 16 * sizeof(float), nullptr, GL_STATIC_DRAW));
+    //OGL_CALL(glNamedBufferSubData(u_trans_buffer_handle_, 0, 16 * sizeof(float), &PVM[0]));
+
 
     auto [w, h] = frame_buffer_size();
-    float aspect = static_cast<float>(w) / static_cast<float>(h);
-
-    glm::mat4 P = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 20.0f);
-
-    glm::mat4 PVM = P * V * M;
-
-    GLuint PVMBuffer;
-    OGL_CALL(glCreateBuffers(1, &PVMBuffer));
-    OGL_CALL(glNamedBufferData(PVMBuffer, 16 * sizeof(float), nullptr, GL_STATIC_DRAW));
-    OGL_CALL(glNamedBufferSubData(PVMBuffer, 0, 16 * sizeof(float), &PVM[0]));
-    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1,PVMBuffer));
-
-
     OGL_CALL(glViewport(0, 0, w, h));
     OGL_CALL(glUseProgram(program));
     glEnable(GL_DEPTH_TEST);
@@ -145,8 +146,17 @@ void SimpleShapeApplication::init() {
 
 
 void SimpleShapeApplication::frame() {
-    
+    auto [w, h] = frame_buffer_size();
+
+    P_ = glm::perspective(glm::radians(45.0f), aspect_, 0.1f, 20.0f);
+
+    glm::mat4 PVM = P_ * V_ * M_;
+    OGL_CALL(glNamedBufferSubData(u_trans_buffer_handle_, 0, 16 * sizeof(float), &PVM[0]));
+    OGL_CALL(glBindBufferBase(GL_UNIFORM_BUFFER, 1,u_trans_buffer_handle_));
+
     OGL_CALL(glBindVertexArray(vao_));
     OGL_CALL(glDrawElements(GL_TRIANGLES, 18,GL_UNSIGNED_BYTE,nullptr));
     OGL_CALL(glBindVertexArray(0));
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);  // Unbind the buffer
 }
