@@ -18,7 +18,9 @@
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
     Application::framebuffer_resize_callback(w, h);
     OGL_CALL(glViewport(0, 0, w, h));
+    camera()->set_aspect(static_cast<float>(w) / h); 
 }
+
 
 void SimpleShapeApplication::init() {
     /*
