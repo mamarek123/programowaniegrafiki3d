@@ -137,6 +137,7 @@ void SimpleShapeApplication::init() {
 
 
     auto [w, h] = frame_buffer_size();
+    aspect_ = static_cast<float>(w) / static_cast<float>(h);
     OGL_CALL(glViewport(0, 0, w, h));
     OGL_CALL(glUseProgram(program));
     glEnable(GL_DEPTH_TEST);
