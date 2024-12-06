@@ -29,6 +29,9 @@ void SimpleShapeApplication::init() {
      * its source file. The source files are located in the PROJECT_DIR/shaders directory, where  PROJECT_DIR is the
      * current assignment directory (e.g., src/Assignments/Triangle).
      */
+    set_camera(new Camera);
+    set_controler(new CameraController(camera()));
+
     auto program = xe::utils::create_program(
         {
             {GL_VERTEX_SHADER, std::string(PROJECT_DIR) + "/shaders/base_vs.glsl"},
@@ -126,7 +129,7 @@ void SimpleShapeApplication::init() {
     M_ = glm::mat4(1.0);
 
 
-    set_camera(new Camera);
+
     auto [w, h] = frame_buffer_size(); // Get width and height of the frame buffer
     camera()->look_at(glm::vec3(2.0f, 1.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     camera()->perspective(glm::radians(45.0f), static_cast<float>(w) / h, 0.1f, 100.0f);
