@@ -114,8 +114,6 @@ private:
     float aspect_;
     float near_;
     float far_;
-    //todo delete
-    //glm::mat4 V_;
 
     glm::vec3 position_;  // Pozycja kamery
     glm::vec3 center_;    // Punkt centralny, na który kamera jest skierowana
