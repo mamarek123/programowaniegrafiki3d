@@ -18,7 +18,6 @@
 void SimpleShapeApplication::framebuffer_resize_callback(int w, int h) {
     Application::framebuffer_resize_callback(w, h);
     aspect_ = static_cast<float>(w) / static_cast<float>(h);
-    //
     OGL_CALL(glViewport(0, 0, w, h));
 }
 
