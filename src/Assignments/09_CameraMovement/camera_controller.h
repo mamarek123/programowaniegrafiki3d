@@ -12,12 +12,8 @@
 
 class CameraController {
 public:
-    CameraController():camera_(nullptr) {
-        LMB_pressed_ = false;
-    }
-    CameraController(Camera* camera):camera_(camera) {
-        LMB_pressed_ = false;
-    }
+    CameraController():camera_(nullptr),LMB_pressed_(false),scale_(0.01) {}
+    CameraController(Camera* camera):camera_(camera),LMB_pressed_(false),scale_(0.01) {}
     void set_camera(Camera *camera) { camera_ = camera; }
 
     void rotate_camera(float dx, float dy) {
