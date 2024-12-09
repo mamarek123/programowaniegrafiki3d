@@ -1,4 +1,4 @@
-# Assignments 38.0/150.0
+# Assignments 49.2/150.0
 
 ## House OK 2.0/2.0
 
@@ -33,4 +33,8 @@ Zły parametr scale.
 ## Zoom OK 10.0/10.0
 
 17.11.2024 15:57:51 OK
+
+## Camera movement Late 11.2/15.0
+
+9.12.2024 17:06:45 OK
 
