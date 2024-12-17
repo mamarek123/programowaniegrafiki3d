@@ -38,3 +38,7 @@ Zły parametr scale.
 
 9.12.2024 17:06:45 OK
 
+## Mesh Missing 0/12.0
+
+
+
