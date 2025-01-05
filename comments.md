@@ -42,3 +42,7 @@ Zły parametr scale.
 
 
 
+## Kd material Missing 0/20.0
+
+
+
