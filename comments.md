@@ -46,3 +46,11 @@ Zły parametr scale.
 
 
 
+## Textures Missing 0/15.0
+
+
+
+## OBJReader Missing 0/5.0
+
+
+
