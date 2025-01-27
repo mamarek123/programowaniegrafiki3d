@@ -54,3 +54,7 @@ Zły parametr scale.
 
 
 
+## Diffuse Missing 0/25.0
+
+
+
