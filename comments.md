@@ -58,3 +58,7 @@ Zły parametr scale.
 
 
 
+## Specular Missing 0/12.0
+
+
+
